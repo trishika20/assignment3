@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests (optional)
+      run: npm test
+
+    - name: Build Docker image
+      run: docker build . -t my-web-app
+
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+        username: ${{ secrets.AZURE_USERNAME }}
+        password: ${{ secrets.AZURE_PASSWORD }}
+
+    - name: Push Docker image to ACR
+      run: docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}/my-web-app:latest
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'myAppService'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .
+

@@ -1,0 +1,21 @@
+{
+  "name": "assignment_2",
+  "version": "1.0.0",
+  "description": "Assignment 2 ",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --exit",
+    "start": "node app.js"
+  },
+  "author": "trishika20",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "mocha": "^10.7.3",
+    "node-fetch": "^3.3.2"
+  }
+}
